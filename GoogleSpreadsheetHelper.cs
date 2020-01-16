@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UniRx.Async;
 
-namespace GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheet
 {
     public static class GoogleSpreadsheetHelper
     {

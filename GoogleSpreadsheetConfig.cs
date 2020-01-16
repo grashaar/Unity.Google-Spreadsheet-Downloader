@@ -6,7 +6,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 #endif
 
-namespace GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheet
 {
     [CreateAssetMenu(fileName = nameof(GoogleSpreadsheetConfig), menuName = "Google Spreadsheet Config", order = 1)]
     public sealed class GoogleSpreadsheetConfig : ScriptableObject

@@ -5,7 +5,7 @@ using UnityEditor;
 using Sirenix.OdinInspector.Editor;
 #endif
 
-namespace GoogleSpreadsheet.Editor
+namespace Unity.GoogleSpreadsheet.Editor
 {
     [CustomEditor(typeof(GoogleSpreadsheetConfig))]
     public sealed class GoogleSpreadsheetConfigEditor :

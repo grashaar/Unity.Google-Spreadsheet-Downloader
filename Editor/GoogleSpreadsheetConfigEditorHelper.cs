@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace GoogleSpreadsheet.Editor
+namespace Unity.GoogleSpreadsheet.Editor
 {
     public static class GoogleSpreadsheetConfigEditorHelper
     {

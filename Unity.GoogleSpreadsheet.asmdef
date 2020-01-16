@@ -1,12 +1,11 @@
 {
-    "name": "GoogleSpreadsheet.Editor",
+    "name": "Unity.GoogleSpreadsheet",
     "references": [
-        "GoogleSpreadsheet"
+        "UnityCore",
+        "UniRx.Async"
     ],
     "optionalUnityReferences": [],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

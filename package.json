@@ -1,0 +1,17 @@
+{
+  "name": "com.grashaar.unity-googlespreadsheet",
+  "displayName": "Unity.GoogleSpreadsheet",
+  "version": "0.0.1",
+  "unity": "2019.1",
+  "license": "MIT",
+  "description": "Simple Google Spreadsheet downloader for Unity",
+  "keywords": [
+    "unity"
+  ],
+  "category": "Unity",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grashaar/Unity.GoogleSpreadsheet.git"
+  },
+  "author": "Grashaar <grashaar@outlook.com> (https://github.com/grashaar)"
+}

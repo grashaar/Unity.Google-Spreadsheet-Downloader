@@ -76,8 +76,11 @@ namespace Unity.GoogleSpreadsheet
 
             foreach (var kv in config.SheetGids)
             {
-                var url = config.GetDownloadUrl(kv.Value);
-                var path = Path.Combine(directory, $"{kv.Key}.{config.FileType}");
+                var fileName = kv.Key;
+                var sheetDef = kv.Value;
+                var url = config.GetDownloadUrl(sheetDef.Gid);
+                var ext = string.IsNullOrEmpty(sheetDef.CustomExtension) ? $"{config.Format}" : sheetDef.CustomExtension;
+                var path = Path.Combine(directory, $"{fileName}.{ext}");
 
                 await Download(UnityWebRequest.Get(url), path);
 

@@ -21,23 +21,23 @@ namespace Unity.GoogleSpreadsheet
             => this.spreadsheetId;
 
 #if ODIN_INSPECTOR
-        [ValueDropdown(nameof(fileTypes))]
+        [ValueDropdown(nameof(formats))]
 #endif
         [SerializeField]
-        private FileType fileType = FileType.csv;
+        private FormatType format = FormatType.csv;
 
-        public FileType FileType
-            => this.fileType;
+        public FormatType Format
+            => this.format;
 
 #if ODIN_INSPECTOR
-        [DictionaryDrawerSettings(KeyLabel = "Sheet Name", ValueLabel = "Gid")]
+        [DictionaryDrawerSettings(KeyLabel = "File Name", ValueLabel = "Sheet Definition")]
 #endif
         [Space]
         [SerializeField]
-        private StringDictionary sheetGids = new StringDictionary();
+        private SheetDictionary sheetDefinitions = new SheetDictionary();
 
-        public IReadOnlyDictionary<string, string> SheetGids
-            => this.sheetGids;
+        public IReadOnlyDictionary<string, SheetDefinition> SheetGids
+            => this.sheetDefinitions;
 
         [Space]
         [SerializeField]
@@ -47,22 +47,22 @@ namespace Unity.GoogleSpreadsheet
             => this.downloadFolder;
 
         public string GetDownloadUrl(string gid)
-            => string.Format(_url, this.spreadsheetId, gid, this.fileType);
+            => string.Format(_url, this.spreadsheetId, gid, this.format);
 
 #if ODIN_INSPECTOR
-        private readonly ValueDropdownList<FileType> fileTypes = new ValueDropdownList<FileType> {
-            { ".csv"  , FileType.csv  },
-            { ".tsv"  , FileType.tsv  },
-            { ".xlsx" , FileType.xlsx },
-            { ".ods"  , FileType.ods  },
+        private readonly ValueDropdownList<FormatType> formats = new ValueDropdownList<FormatType> {
+            { ".csv"  , FormatType.csv  },
+            { ".tsv"  , FormatType.tsv  },
+            { ".xlsx" , FormatType.xlsx },
+            { ".ods"  , FormatType.ods  },
         };
 #endif
 
         [Serializable]
-        private sealed class StringDictionary : SerializableDictionary<string, string> { }
+        private sealed class SheetDictionary : SerializableDictionary<string, SheetDefinition> { }
     }
 
-    public enum FileType
+    public enum FormatType
     {
         csv, tsv, xlsx, ods
     }

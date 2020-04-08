@@ -2,7 +2,8 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
-using UniRx.Async;
+using UnityFx.Async;
+using UnityFx.Tasks;
 
 namespace Unity.GoogleSpreadsheet
 {
@@ -92,11 +93,11 @@ namespace Unity.GoogleSpreadsheet
             finishCallback?.Invoke();
         }
 
-        private static async UniTask Download(UnityWebRequest req, string filePath)
+        private static async AsyncResult Download(UnityWebRequest req, string filePath)
         {
-            var operation = await req.SendWebRequest();
+            await req.SendWebRequest();
 
-            File.WriteAllText(filePath, operation.downloadHandler.text ?? string.Empty);
+            File.WriteAllText(filePath, req.downloadHandler.text ?? string.Empty);
         }
     }
 }

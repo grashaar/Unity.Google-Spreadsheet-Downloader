@@ -2,7 +2,8 @@
     "name": "Unity.GoogleSpreadsheet",
     "references": [
         "UnityCore",
-        "UniRx.Async"
+        "UnityFx.Async",
+        "UnityFx.Tasks"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

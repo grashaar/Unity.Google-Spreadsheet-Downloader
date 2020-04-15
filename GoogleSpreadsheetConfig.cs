@@ -30,13 +30,13 @@ namespace Unity.GoogleSpreadsheet
             => this.format;
 
 #if ODIN_INSPECTOR
-        [DictionaryDrawerSettings(KeyLabel = "File Name", ValueLabel = "Sheet Definition")]
+        [DictionaryDrawerSettings(KeyLabel = "Name", ValueLabel = "Definition")]
 #endif
         [Space]
         [SerializeField]
         private SheetDictionary sheetDefinitions = new SheetDictionary();
 
-        public IReadOnlyDictionary<string, SheetDefinition> SheetGids
+        public IReadOnlyDictionary<SheetName, SheetDefinition> SheetGids
             => this.sheetDefinitions;
 
         [Space]
@@ -59,7 +59,7 @@ namespace Unity.GoogleSpreadsheet
 #endif
 
         [Serializable]
-        private sealed class SheetDictionary : SerializableDictionary<string, SheetDefinition> { }
+        private sealed class SheetDictionary : SerializableDictionary<SheetName, SheetDefinition> { }
     }
 
     public enum FormatType

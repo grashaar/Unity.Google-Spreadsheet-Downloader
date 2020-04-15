@@ -5,6 +5,10 @@ using UnityEngine.Networking;
 using UnityFx.Async;
 using UnityFx.Tasks;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Unity.GoogleSpreadsheet
 {
     public static class GoogleSpreadsheetHelper
@@ -77,11 +81,11 @@ namespace Unity.GoogleSpreadsheet
 
             foreach (var kv in config.SheetGids)
             {
-                var fileName = kv.Key;
+                var sheetName = kv.Key;
                 var sheetDef = kv.Value;
                 var url = config.GetDownloadUrl(sheetDef.Gid);
                 var ext = string.IsNullOrEmpty(sheetDef.CustomExtension) ? $"{config.Format}" : sheetDef.CustomExtension;
-                var path = Path.Combine(directory, $"{fileName}.{ext}");
+                var path = Path.Combine(directory, $"{sheetName}.{ext}");
 
                 await Download(UnityWebRequest.Get(url), path);
 
@@ -99,5 +103,45 @@ namespace Unity.GoogleSpreadsheet
 
             File.WriteAllText(filePath, req.downloadHandler.text ?? string.Empty);
         }
+
+#if UNITY_EDITOR
+        internal static async void Download(string sheetName)
+        {
+            if (string.IsNullOrEmpty(sheetName))
+            {
+                Debug.LogError($"Sheet name is null or empty");
+                return;
+            }
+
+            if (!(Selection.activeObject is GoogleSpreadsheetConfig config))
+            {
+                Debug.LogError($"The current selected object is not an instance of {nameof(GoogleSpreadsheetConfig)}");
+                return;
+            }
+
+            if (!config.SheetGids.TryGetValue(sheetName, out var sheetDef))
+            {
+                Debug.LogError($"The instance of {nameof(GoogleSpreadsheetConfig)} does not contain any sheet whose name is {sheetName}", Selection.activeObject);
+                return;
+            }
+
+            var directory = GetDownloadDirectory(config);
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            var url = config.GetDownloadUrl(sheetDef.Gid);
+            var ext = string.IsNullOrEmpty(sheetDef.CustomExtension) ? $"{config.Format}" : sheetDef.CustomExtension;
+            var path = Path.Combine(directory, $"{sheetName}.{ext}");
+
+            Debug.Log($"Begin downloading <b>{sheetName}.{ext}</b>");
+
+            await Download(UnityWebRequest.Get(url), path);
+
+            Debug.Log($"Downloaded <b>{sheetName}.{ext}</b> to {path}");
+        }
+#endif
     }
 }

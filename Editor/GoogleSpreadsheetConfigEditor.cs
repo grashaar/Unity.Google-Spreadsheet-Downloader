@@ -15,6 +15,7 @@ namespace Unity.GoogleSpreadsheet.Editor
         UnityEditor.Editor
 #endif
     {
+        private SerializedProperty keys;
         private GoogleSpreadsheetConfig config;
         private int total;
 
@@ -27,10 +28,15 @@ namespace Unity.GoogleSpreadsheet.Editor
         {
 #endif
             this.config = this.target as GoogleSpreadsheetConfig;
+            this.keys = this.serializedObject.FindProperty("sheetDefinitions").FindPropertyRelative("keys");
         }
 
         public override void OnInspectorGUI()
         {
+            this.serializedObject.Update();
+
+            ApplyIsAdded();
+
             EditorGUILayout.HelpBox("Google Spreadsheet document must be published " +
                                     "to the web before using this tool.", MessageType.Warning);
 
@@ -47,6 +53,28 @@ namespace Unity.GoogleSpreadsheet.Editor
             {
                 this.total = GoogleSpreadsheetHelper.Download(this.config, UpdateDownloadProgress, FinishDownload);
                 ShowProgressBar();
+            }
+        }
+
+        private void ApplyIsAdded()
+        {
+            var changed = false;
+
+            for (var i = 0; i < this.keys.arraySize; i++)
+            {
+                var elem = this.keys.GetArrayElementAtIndex(i);
+                var isAdded = elem.FindPropertyRelative("isAdded");
+
+                if (!isAdded.boolValue)
+                {
+                    isAdded.boolValue = true;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                this.serializedObject.ApplyModifiedProperties();
             }
         }
 

@@ -27,6 +27,9 @@ namespace Unity.GoogleSpreadsheet
         public bool Equals(SheetName other)
             => other != null ? string.Equals(this.Name, other.Name) : false;
 
+        public override string ToString()
+            => this.Name;
+
 #if UNITY_EDITOR
         [HideInInspector]
         [SerializeField]

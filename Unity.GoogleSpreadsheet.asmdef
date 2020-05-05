@@ -1,7 +1,7 @@
 {
     "name": "Unity.GoogleSpreadsheet",
     "references": [
-        "UnityCore",
+        "Unity.Supplements",
         "UnityFx.Async",
         "UnityFx.Tasks"
     ],

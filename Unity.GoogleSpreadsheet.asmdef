@@ -2,8 +2,8 @@
     "name": "Unity.GoogleSpreadsheet",
     "references": [
         "Unity.Supplements",
-        "UnityFx.Async",
-        "UnityFx.Tasks"
+        "UniTask",
+        "UniTask.Linq"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

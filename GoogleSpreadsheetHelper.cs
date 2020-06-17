@@ -2,8 +2,7 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityFx.Async;
-using UnityFx.Tasks;
+using Cysharp.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -97,7 +96,7 @@ namespace Unity.GoogleSpreadsheet
             finishCallback?.Invoke();
         }
 
-        private static async AsyncResult Download(UnityWebRequest req, string filePath)
+        private static async UniTask Download(UnityWebRequest req, string filePath)
         {
             await req.SendWebRequest();
 

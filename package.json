@@ -15,8 +15,7 @@
   },
   "author": "Grashaar <grashaar@outlook.com> (https://github.com/grashaar)",
   "dependencies": {
-    "com.unityfx.tasks": "0.2.0",
-    "com.unityfx.async": "1.1.0",
+    "com.cysharp.unitask": "2.0.19",
     "com.laicasaane.unity-supplements": "1.0.0"
   }
 }

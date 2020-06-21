@@ -3,7 +3,7 @@
     "references": [
         "Unity.Supplements",
         "UniTask",
-        "UniTask.Linq"
+        "Unity.ResourceManager"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

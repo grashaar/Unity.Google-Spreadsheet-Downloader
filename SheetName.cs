@@ -40,7 +40,7 @@ namespace Unity.GoogleSpreadsheet
 #endif
         internal void Download()
         {
-            GoogleSpreadsheetHelper.Download(this.Name);
+            GoogleSpreadsheetHelper.Download(this.Name).Forget();
         }
 #endif
 

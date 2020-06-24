@@ -42,7 +42,7 @@ namespace Unity.GoogleSpreadsheet
                 Directory.CreateDirectory(downloadPath);
             }
 
-            DownloadAsync(config, downloadPath, progressCallback, finishCallback);
+            DownloadAsync(config, downloadPath, progressCallback, finishCallback).Forget();
             return config.SheetGids.Count;
         }
 
@@ -69,11 +69,11 @@ namespace Unity.GoogleSpreadsheet
                 Directory.CreateDirectory(directory);
             }
 
-            DownloadAsync(config, directory, progressCallback, finishCallback);
+            DownloadAsync(config, directory, progressCallback, finishCallback).Forget();
             return config.SheetGids.Count;
         }
 
-        private static async void DownloadAsync(GoogleSpreadsheetConfig config, string directory,
+        private static async UniTaskVoid DownloadAsync(GoogleSpreadsheetConfig config, string directory,
                                                 Action<int> progressCallback, Action finishCallback)
         {
             var i = 1;
@@ -104,7 +104,7 @@ namespace Unity.GoogleSpreadsheet
         }
 
 #if UNITY_EDITOR
-        internal static async void Download(string sheetName)
+        internal static async UniTaskVoid Download(string sheetName)
         {
             if (string.IsNullOrEmpty(sheetName))
             {

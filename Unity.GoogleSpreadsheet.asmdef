@@ -2,8 +2,7 @@
     "name": "Unity.GoogleSpreadsheet",
     "references": [
         "Unity.Supplements",
-        "UniTask",
-        "Unity.ResourceManager"
+        "UniTask"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

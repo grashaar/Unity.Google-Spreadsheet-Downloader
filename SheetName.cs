@@ -22,10 +22,10 @@ namespace Unity.GoogleSpreadsheet
             => this.Name.GetHashCode();
 
         public override bool Equals(object obj)
-            => obj is SheetName other ? string.Equals(this.Name, other.Name) : false;
+            => obj is SheetName other && string.Equals(this.Name, other.Name);
 
         public bool Equals(SheetName other)
-            => other != null ? string.Equals(this.Name, other.Name) : false;
+            => other != null && string.Equals(this.Name, other.Name);
 
         public override string ToString()
             => this.Name;
@@ -40,7 +40,7 @@ namespace Unity.GoogleSpreadsheet
 #endif
         internal void Download()
         {
-            GoogleSpreadsheetHelper.Download(this.Name).Forget();
+            GoogleSpreadsheetHelper.DownloadSheet(this.Name);
         }
 #endif
 

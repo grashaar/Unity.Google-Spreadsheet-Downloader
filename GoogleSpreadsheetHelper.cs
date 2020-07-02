@@ -2,15 +2,16 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
-using Cysharp.Threading.Tasks;
 
-#if UNITY_EDITOR
-using UnityEditor;
+#if UNITY_GOOGLESPREADSHEET_UNITASK
+using Cysharp.Threading.Tasks;
+#else
+using System.Threading.Tasks;
 #endif
 
 namespace Unity.GoogleSpreadsheet
 {
-    public static class GoogleSpreadsheetHelper
+    public static partial class GoogleSpreadsheetHelper
     {
         public static string GetDownloadDirectory(GoogleSpreadsheetConfig config)
         {
@@ -25,11 +26,11 @@ namespace Unity.GoogleSpreadsheet
         /// </summary>
         /// <param name="config"></param>
         /// <param name="downloadPath"></param>
-        /// <param name="progressCallback"></param>
-        /// <param name="finishCallback"></param>
+        /// <param name="onUpdateProgress"></param>
+        /// <param name="onCompleted"></param>
         /// <returns>Total sheet count</returns>
         public static int Download(GoogleSpreadsheetConfig config, string downloadPath,
-                                   Action<int> progressCallback = null, Action finishCallback = null)
+                                   Action<int> onUpdateProgress = null, Action onCompleted = null)
         {
             if (!config)
                 return 0;
@@ -42,7 +43,12 @@ namespace Unity.GoogleSpreadsheet
                 Directory.CreateDirectory(downloadPath);
             }
 
-            DownloadAsync(config, downloadPath, progressCallback, finishCallback).Forget();
+#if UNITY_GOOGLESPREADSHEET_UNITASK
+            DownloadSheets(config, downloadPath, onUpdateProgress, onCompleted).Forget();
+#else
+            DownloadSheets(config, downloadPath, onUpdateProgress, onCompleted);
+#endif
+
             return config.SheetGids.Count;
         }
 
@@ -50,11 +56,11 @@ namespace Unity.GoogleSpreadsheet
         ///
         /// </summary>
         /// <param name="config"></param>
-        /// <param name="progressCallback"></param>
-        /// <param name="finishCallback"></param>
+        /// <param name="onUpdateProgress"></param>
+        /// <param name="onCompleted"></param>
         /// <returns>Total sheet count</returns>
         public static int Download(GoogleSpreadsheetConfig config,
-                                   Action<int> progressCallback = null, Action finishCallback = null)
+                                   Action<int> onUpdateProgress = null, Action onCompleted = null)
         {
             if (!config)
                 return 0;
@@ -69,12 +75,22 @@ namespace Unity.GoogleSpreadsheet
                 Directory.CreateDirectory(directory);
             }
 
-            DownloadAsync(config, directory, progressCallback, finishCallback).Forget();
+#if UNITY_GOOGLESPREADSHEET_UNITASK
+            DownloadSheets(config, directory, onUpdateProgress, onCompleted).Forget();
+#else
+            DownloadSheets(config, directory, onUpdateProgress, onCompleted);
+#endif
+
             return config.SheetGids.Count;
         }
 
-        private static async UniTaskVoid DownloadAsync(GoogleSpreadsheetConfig config, string directory,
-                                                Action<int> progressCallback, Action finishCallback)
+#if UNITY_GOOGLESPREADSHEET_UNITASK
+        private static async UniTaskVoid DownloadSheets(GoogleSpreadsheetConfig config, string directory,
+                                                        Action<int> onUpdateProgress, Action onCompleted)
+#else
+        private static async void DownloadSheets(GoogleSpreadsheetConfig config, string directory,
+                                                 Action<int> onUpdateProgress, Action onCompleted)
+#endif
         {
             var i = 1;
 
@@ -86,61 +102,26 @@ namespace Unity.GoogleSpreadsheet
                 var ext = string.IsNullOrEmpty(sheetDef.CustomExtension) ? $"{config.Format}" : sheetDef.CustomExtension;
                 var path = Path.Combine(directory, $"{sheetName}.{ext}");
 
-                await Download(UnityWebRequest.Get(url), path);
+                await DownloadDataAsync(url, path);
 
-                progressCallback?.Invoke(i);
+                onUpdateProgress?.Invoke(i);
 
                 i += 1;
             }
 
-            finishCallback?.Invoke();
+            onCompleted?.Invoke();
         }
 
-        private static async UniTask Download(UnityWebRequest req, string filePath)
+#if UNITY_GOOGLESPREADSHEET_UNITASK
+        private static async UniTask DownloadDataAsync(string url, string filePath)
+#else
+        private static async Task DownloadDataAsync(string url, string filePath)
+#endif
         {
+            var req = UnityWebRequest.Get(url);
             await req.SendWebRequest();
 
             File.WriteAllText(filePath, req.downloadHandler.text ?? string.Empty);
         }
-
-#if UNITY_EDITOR
-        internal static async UniTaskVoid Download(string sheetName)
-        {
-            if (string.IsNullOrEmpty(sheetName))
-            {
-                Debug.LogError($"Sheet name is null or empty");
-                return;
-            }
-
-            if (!(Selection.activeObject is GoogleSpreadsheetConfig config))
-            {
-                Debug.LogError($"The current selected object is not an instance of {nameof(GoogleSpreadsheetConfig)}");
-                return;
-            }
-
-            if (!config.SheetGids.TryGetValue(sheetName, out var sheetDef))
-            {
-                Debug.LogError($"The instance of {nameof(GoogleSpreadsheetConfig)} does not contain any sheet whose name is {sheetName}", Selection.activeObject);
-                return;
-            }
-
-            var directory = GetDownloadDirectory(config);
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            var url = config.GetDownloadUrl(sheetDef.Gid);
-            var ext = string.IsNullOrEmpty(sheetDef.CustomExtension) ? $"{config.Format}" : sheetDef.CustomExtension;
-            var path = Path.Combine(directory, $"{sheetName}.{ext}");
-
-            Debug.Log($"Begin downloading <b>{sheetName}.{ext}</b>");
-
-            await Download(UnityWebRequest.Get(url), path);
-
-            Debug.Log($"Downloaded <b>{sheetName}.{ext}</b> to {path}");
-        }
-#endif
     }
 }

@@ -1,4 +1,4 @@
-﻿#if UNITY_GOOGLESPREADSHEET_UNITASK
+﻿#if !UNITY_GOOGLESPREADSHEET_UNITASK
 
 using System;
 using System.Runtime.CompilerServices;

@@ -3,17 +3,17 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
 using Cysharp.Threading.Tasks;
 #else
 using System.Threading.Tasks;
 #endif
 
-namespace Unity.GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheetDownloader
 {
-    public static partial class GoogleSpreadsheetHelper
+    public static partial class SpreadsheetDownloader
     {
-        public static string GetDownloadDirectory(GoogleSpreadsheetConfig config)
+        public static string GetDirectoryPath(SpreadsheetDownloaderConfig config)
         {
             if (!config || string.IsNullOrEmpty(config.DownloadFolder))
                 return Application.dataPath;
@@ -29,7 +29,7 @@ namespace Unity.GoogleSpreadsheet
         /// <param name="onUpdateProgress"></param>
         /// <param name="onCompleted"></param>
         /// <returns>Total sheet count</returns>
-        public static int Download(GoogleSpreadsheetConfig config, string downloadPath,
+        public static int Download(SpreadsheetDownloaderConfig config, string downloadPath,
                                    Action<int> onUpdateProgress = null, Action onCompleted = null)
         {
             if (!config)
@@ -43,7 +43,7 @@ namespace Unity.GoogleSpreadsheet
                 Directory.CreateDirectory(downloadPath);
             }
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
             DownloadSheets(config, downloadPath, onUpdateProgress, onCompleted).Forget();
 #else
             DownloadSheets(config, downloadPath, onUpdateProgress, onCompleted);
@@ -59,7 +59,7 @@ namespace Unity.GoogleSpreadsheet
         /// <param name="onUpdateProgress"></param>
         /// <param name="onCompleted"></param>
         /// <returns>Total sheet count</returns>
-        public static int Download(GoogleSpreadsheetConfig config,
+        public static int Download(SpreadsheetDownloaderConfig config,
                                    Action<int> onUpdateProgress = null, Action onCompleted = null)
         {
             if (!config)
@@ -68,14 +68,14 @@ namespace Unity.GoogleSpreadsheet
             if (config.SheetGids.Count <= 0)
                 return 0;
 
-            var directory = GetDownloadDirectory(config);
+            var directory = GetDirectoryPath(config);
 
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
             DownloadSheets(config, directory, onUpdateProgress, onCompleted).Forget();
 #else
             DownloadSheets(config, directory, onUpdateProgress, onCompleted);
@@ -84,11 +84,11 @@ namespace Unity.GoogleSpreadsheet
             return config.SheetGids.Count;
         }
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
-        private static async UniTaskVoid DownloadSheets(GoogleSpreadsheetConfig config, string directory,
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
+        private static async UniTaskVoid DownloadSheets(SpreadsheetDownloaderConfig config, string directory,
                                                         Action<int> onUpdateProgress, Action onCompleted)
 #else
-        private static async void DownloadSheets(GoogleSpreadsheetConfig config, string directory,
+        private static async void DownloadSheets(SpreadsheetDownloaderConfig config, string directory,
                                                  Action<int> onUpdateProgress, Action onCompleted)
 #endif
         {
@@ -112,7 +112,7 @@ namespace Unity.GoogleSpreadsheet
             onCompleted?.Invoke();
         }
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
         private static async UniTask DownloadDataAsync(string url, string filePath)
 #else
         private static async Task DownloadDataAsync(string url, string filePath)

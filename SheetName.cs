@@ -5,7 +5,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 #endif
 
-namespace Unity.GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheetDownloader
 {
 #if ODIN_INSPECTOR
     [InlineProperty]
@@ -16,36 +16,43 @@ namespace Unity.GoogleSpreadsheet
 #if ODIN_INSPECTOR
         [HideLabel]
 #endif
-        public string Name = string.Empty;
+        [SerializeField]
+        private string name = string.Empty;
+
+        public string Name
+        {
+            get => this.name;
+            set => this.name = value ?? string.Empty;
+        }
 
         public override int GetHashCode()
-            => this.Name.GetHashCode();
+            => this.name.GetHashCode();
 
         public override bool Equals(object obj)
-            => obj is SheetName other && string.Equals(this.Name, other.Name);
+            => obj is SheetName other && string.Equals(this.name, other.name);
 
         public bool Equals(SheetName other)
-            => other != null && string.Equals(this.Name, other.Name);
+            => other != null && string.Equals(this.name, other.name);
 
         public override string ToString()
-            => this.Name;
+            => this.name;
 
 #if UNITY_EDITOR
-        [HideInInspector]
-        [SerializeField]
-        private bool isAdded;
+        [SerializeField, HideInInspector]
+        private bool isAdded = default;
 
 #if  ODIN_INSPECTOR
-        [Button, ShowIf(nameof(isAdded))]
+        [Button, ShowIf(nameof(Validate))]
 #endif
-        internal void Download()
-        {
-            GoogleSpreadsheetHelper.DownloadSheet(this.Name);
-        }
+        private void Download()
+            => SpreadsheetDownloader.DownloadSheet(this.name);
+
+        private bool Validate()
+            => this.isAdded && !string.IsNullOrWhiteSpace(this.name);
 #endif
 
         public static implicit operator string(SheetName value)
-            => value?.Name ?? string.Empty;
+            => value?.name ?? string.Empty;
 
         public static implicit operator SheetName(string value)
             => new SheetName() { Name = value };

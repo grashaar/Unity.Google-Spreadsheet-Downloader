@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #endif
 
-namespace Unity.GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheetDownloader
 {
-    [CreateAssetMenu(fileName = nameof(GoogleSpreadsheetConfig), menuName = "Google Spreadsheet Config", order = 1)]
-    public sealed class GoogleSpreadsheetConfig : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(SpreadsheetDownloaderConfig), menuName = "Spreadsheet Downloader Config", order = 1)]
+    public sealed class SpreadsheetDownloaderConfig : ScriptableObject
     {
         private const string _url = "https://docs.google.com/spreadsheets/d/e/{0}/pub?gid={1}&single=true&output={2}";
 
@@ -34,7 +33,7 @@ namespace Unity.GoogleSpreadsheet
 #endif
         [Space]
         [SerializeField]
-        private SheetDictionary sheetDefinitions = new SheetDictionary();
+        private SheetMap sheetDefinitions = new SheetMap();
 
         public IReadOnlyDictionary<SheetName, SheetDefinition> SheetGids
             => this.sheetDefinitions;
@@ -57,9 +56,6 @@ namespace Unity.GoogleSpreadsheet
             { ".ods"  , FormatType.ods  },
         };
 #endif
-
-        [Serializable]
-        private sealed class SheetDictionary : SerializableDictionary<SheetName, SheetDefinition> { }
     }
 
     public enum FormatType

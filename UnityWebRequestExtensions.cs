@@ -1,11 +1,11 @@
-﻿#if !UNITY_GOOGLESPREADSHEET_UNITASK
+﻿#if !UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
 
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Unity.GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheetDownloader
 {
     public sealed class UnityWebRequestAwaiter : INotifyCompletion
     {

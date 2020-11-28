@@ -3,7 +3,7 @@
 using System.IO;
 using UnityEngine;
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
 using Cysharp.Threading.Tasks;
 #else
 using System.Threading.Tasks;
@@ -11,20 +11,20 @@ using System.Threading.Tasks;
 
 using UnityEditor;
 
-namespace Unity.GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheetDownloader
 {
-    public static partial class GoogleSpreadsheetHelper
+    public static partial class SpreadsheetDownloader
     {
         internal static void DownloadSheet(string sheetName)
         {
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
             DownloadSheetInternal(sheetName).Forget();
 #else
             DownloadSheetInternal(sheetName);
 #endif
         }
 
-#if UNITY_GOOGLESPREADSHEET_UNITASK
+#if UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK
         private static async UniTaskVoid DownloadSheetInternal(string sheetName)
 #else
         private static async void DownloadSheetInternal(string sheetName)
@@ -36,19 +36,19 @@ namespace Unity.GoogleSpreadsheet
                 return;
             }
 
-            if (!(Selection.activeObject is GoogleSpreadsheetConfig config))
+            if (!(Selection.activeObject is SpreadsheetDownloaderConfig config))
             {
-                Debug.LogError($"The current selected object is not an instance of {nameof(GoogleSpreadsheetConfig)}");
+                Debug.LogError($"The current selected object is not an instance of {nameof(SpreadsheetDownloaderConfig)}");
                 return;
             }
 
             if (!config.SheetGids.TryGetValue(sheetName, out var sheetDef))
             {
-                Debug.LogError($"The instance of {nameof(GoogleSpreadsheetConfig)} does not contain any sheet whose name is {sheetName}", Selection.activeObject);
+                Debug.LogError($"The instance of {nameof(SpreadsheetDownloaderConfig)} does not contain any sheet whose name is {sheetName}", Selection.activeObject);
                 return;
             }
 
-            var directory = GetDownloadDirectory(config);
+            var directory = GetDirectoryPath(config);
 
             if (!Directory.Exists(directory))
             {
@@ -64,6 +64,8 @@ namespace Unity.GoogleSpreadsheet
             await DownloadDataAsync(url, path);
 
             Debug.Log($"Downloaded <b>{sheetName}.{ext}</b> to {path}");
+
+            AssetDatabase.Refresh();
         }
     }
 }

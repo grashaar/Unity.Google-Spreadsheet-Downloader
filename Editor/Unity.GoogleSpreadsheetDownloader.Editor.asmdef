@@ -1,7 +1,7 @@
 {
-    "name": "Unity.GoogleSpreadsheet.Editor",
+    "name": "Unity.GoogleSpreadsheetDownloader.Editor",
     "references": [
-        "Unity.GoogleSpreadsheet"
+        "Unity.GoogleSpreadsheetDownloader"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [

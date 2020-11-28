@@ -1,21 +1,20 @@
 {
-  "name": "com.grashaar.unity-googlespreadsheet",
-  "displayName": "Unity.GoogleSpreadsheet",
-  "version": "1.0.0",
+  "name": "com.grashaar.unity-google-spreadsheet-downloader",
+  "displayName": "Unity Google Spreadsheet Downloader",
+  "version": "2.0.0",
   "unity": "2019.1",
   "license": "MIT",
-  "description": "Simple Google Spreadsheet downloader for Unity",
+  "description": "A simple tool helps downloading Google Spreadsheet in Unity",
   "keywords": [
     "unity"
   ],
   "category": "Unity",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grashaar/Unity.GoogleSpreadsheet.git"
+    "url": "git+https://github.com/grashaar/Unity.Google-Spreadsheet-Downloader.git"
   },
   "author": "Grashaar <grashaar@outlook.com> (https://github.com/grashaar)",
   "dependencies": {
-    "com.cysharp.unitask": "2.0.19",
-    "com.laicasaane.unity-supplements": "1.0.0"
+    "com.cysharp.unitask": "2.0.19"
   }
 }

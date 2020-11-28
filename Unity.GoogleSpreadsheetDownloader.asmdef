@@ -1,10 +1,8 @@
 {
-    "name": "Unity.GoogleSpreadsheet",
+    "name": "Unity.GoogleSpreadsheetDownloader",
     "references": [
-        "Unity.Supplements",
         "UniTask"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
@@ -16,7 +14,8 @@
         {
             "name": "com.cysharp.unitask",
             "expression": "",
-            "define": "UNITY_GOOGLESPREADSHEET_UNITASK"
+            "define": "UNITY_GOOGLE_SPREADSHEET_DOWNLOADER_UNITASK"
         }
-    ]
+    ],
+    "noEngineReferences": false
 }

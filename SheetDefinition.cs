@@ -4,7 +4,7 @@
 using Sirenix.OdinInspector;
 #endif
 
-namespace Unity.GoogleSpreadsheet
+namespace Unity.GoogleSpreadsheetDownloader
 {
 #if ODIN_INSPECTOR
     [InlineProperty(LabelWidth = 120)]

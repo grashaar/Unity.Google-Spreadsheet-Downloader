@@ -3,20 +3,21 @@ using UnityEditor;
 
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector.Editor;
+using Sirenix.OdinInspector.Editor.Drawers;
 #endif
 
-namespace Unity.GoogleSpreadsheet.Editor
+namespace Unity.GoogleSpreadsheetDownloader.Editor
 {
-    [CustomEditor(typeof(GoogleSpreadsheetConfig))]
-    public sealed class GoogleSpreadsheetConfigEditor :
+    [CustomEditor(typeof(SpreadsheetDownloaderConfig))]
+    public sealed class SpreadsheetDownloaderConfigEditor :
 #if ODIN_INSPECTOR
         OdinEditor
 #else
         UnityEditor.Editor
 #endif
     {
-        private SerializedProperty keys;
-        private GoogleSpreadsheetConfig config;
+        private SerializedProperty entries;
+        private SpreadsheetDownloaderConfig config;
         private int total;
 
 #if ODIN_INSPECTOR
@@ -27,31 +28,34 @@ namespace Unity.GoogleSpreadsheet.Editor
         private void OnEnable()
         {
 #endif
-            this.config = this.target as GoogleSpreadsheetConfig;
-            this.keys = this.serializedObject.FindProperty("sheetDefinitions").FindPropertyRelative("keys");
+            this.config = this.target as SpreadsheetDownloaderConfig;
+            this.entries = this.serializedObject.FindProperty("sheetDefinitions").FindPropertyRelative("entries");
         }
 
         public override void OnInspectorGUI()
         {
+#if !ODIN_INSPECTOR
+            EditorGUILayout.HelpBox("Odin Inspector is required.", MessageType.Warning);
+#endif
+
             this.serializedObject.Update();
 
             ApplyIsAdded();
 
-            EditorGUILayout.HelpBox("Google Spreadsheet document must be published " +
-                                    "to the web before using this tool.", MessageType.Warning);
+            EditorGUILayout.HelpBox("Google Spreadsheet document must be published to the web before using this tool.", MessageType.Info);
 
             GUILayout.Space(16);
 
             base.OnInspectorGUI();
 
-            var downloadDirectory = GoogleSpreadsheetHelper.GetDownloadDirectory(this.config);
-            EditorGUILayout.HelpBox($"Download directory: {downloadDirectory}", MessageType.Info);
+            var directoryPath = SpreadsheetDownloader.GetDirectoryPath(this.config);
+            EditorGUILayout.HelpBox($"{directoryPath}", MessageType.Info);
 
             GUILayout.Space(16);
 
-            if (GUILayout.Button("Download sheets", GUILayout.Height(32)))
+            if (GUILayout.Button("Download All", GUILayout.Height(32)))
             {
-                this.total = GoogleSpreadsheetHelper.Download(this.config, UpdateDownloadProgress, FinishDownload);
+                this.total = SpreadsheetDownloader.Download(this.config, UpdateDownloadProgress, FinishDownload);
                 ShowProgressBar();
             }
         }
@@ -60,10 +64,11 @@ namespace Unity.GoogleSpreadsheet.Editor
         {
             var changed = false;
 
-            for (var i = 0; i < this.keys.arraySize; i++)
+            for (var i = 0; i < this.entries.arraySize; i++)
             {
-                var elem = this.keys.GetArrayElementAtIndex(i);
-                var isAdded = elem.FindPropertyRelative("isAdded");
+                var elem = this.entries.GetArrayElementAtIndex(i);
+                var key = elem.FindPropertyRelative("Key");
+                var isAdded = key.FindPropertyRelative("isAdded");
 
                 if (!isAdded.boolValue)
                 {

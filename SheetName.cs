@@ -11,7 +11,7 @@ namespace Unity.GoogleSpreadsheetDownloader
     [InlineProperty]
 #endif
     [Serializable]
-    public sealed class SheetName : IEquatable<SheetName>
+    public sealed partial class SheetName : IEquatable<SheetName>
     {
 #if ODIN_INSPECTOR
         [HideLabel]
@@ -25,6 +25,16 @@ namespace Unity.GoogleSpreadsheetDownloader
             set => this.name = value ?? string.Empty;
         }
 
+        public SheetName() { }
+
+        public SheetName(string name)
+        {
+            this.Name = name;
+        }
+
+        internal SheetName Clone()
+            => new SheetName(this.name);
+
         public override int GetHashCode()
             => this.name.GetHashCode();
 
@@ -37,24 +47,10 @@ namespace Unity.GoogleSpreadsheetDownloader
         public override string ToString()
             => this.name;
 
-#if UNITY_EDITOR
-        [SerializeField, HideInInspector]
-        private bool isAdded = default;
-
-#if  ODIN_INSPECTOR
-        [Button, ShowIf(nameof(Validate))]
-#endif
-        private void Download()
-            => SpreadsheetDownloader.DownloadSheet(this.name);
-
-        private bool Validate()
-            => this.isAdded && !string.IsNullOrWhiteSpace(this.name);
-#endif
-
         public static implicit operator string(SheetName value)
             => value?.name ?? string.Empty;
 
         public static implicit operator SheetName(string value)
-            => new SheetName() { Name = value };
+            => new SheetName(value);
     }
 }

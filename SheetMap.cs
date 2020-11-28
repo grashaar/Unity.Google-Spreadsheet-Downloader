@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Unity.GoogleSpreadsheetDownloader
@@ -16,6 +17,9 @@ namespace Unity.GoogleSpreadsheetDownloader
 
             foreach (var entry in this.entries)
             {
+                if (ContainsKey(entry.Key))
+                    continue;
+
                 this[entry.Key] = entry.Value;
             }
         }
@@ -26,10 +30,12 @@ namespace Unity.GoogleSpreadsheetDownloader
 
             foreach (var kv in this)
             {
-                var index = this.entries.FindIndex(x => x.Key == kv.Key);
+                var index = this.entries.FindIndex(x => string.Equals(x.Key?.Name, kv.Key?.Name));
 
-                if (index < 0)
-                    this.entries.Add(new Entry { Key = kv.Key, Value = kv.Value });
+                if (index >= 0)
+                    continue;
+
+                this.entries.Add(new Entry { Key = kv.Key.Clone(), Value = kv.Value.Clone() });
             }
         }
 

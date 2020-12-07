@@ -93,16 +93,21 @@ namespace Unity.GoogleSpreadsheetDownloader
 #endif
         {
             var i = 1;
+            var sheets = config.SheetGids.ToArray();
 
-            foreach (var kv in config.SheetGids)
+            foreach (var sheet in sheets)
             {
-                var sheetName = kv.Key;
-                var sheetDef = kv.Value;
+                var sheetName = sheet.Key;
+                var sheetDef = sheet.Value;
                 var url = config.GetDownloadUrl(sheetDef.Gid);
                 var ext = string.IsNullOrEmpty(sheetDef.CustomExtension) ? $"{config.Format}" : sheetDef.CustomExtension;
                 var path = Path.Combine(directory, $"{sheetName}.{ext}");
 
+                Debug.Log($"Begin downloading <b>{sheetName}.{ext}</b>");
+
                 await DownloadDataAsync(url, path);
+
+                Debug.Log($"Downloaded <b>{sheetName}.{ext}</b> to {path}");
 
                 onUpdateProgress?.Invoke(i);
 

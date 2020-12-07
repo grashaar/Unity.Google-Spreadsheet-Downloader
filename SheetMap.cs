@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Unity.GoogleSpreadsheetDownloader
@@ -39,8 +38,11 @@ namespace Unity.GoogleSpreadsheetDownloader
             }
         }
 
+        public Entry[] ToArray()
+            => this.entries.ToArray();
+
         [Serializable]
-        private class Entry
+        public class Entry
         {
             public SheetName Key;
             public SheetDefinition Value;

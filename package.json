@@ -1,7 +1,7 @@
 {
   "name": "com.grashaar.unity-google-spreadsheet-downloader",
   "displayName": "Unity Google Spreadsheet Downloader",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "unity": "2019.1",
   "license": "MIT",
   "description": "A simple tool helps downloading Google Spreadsheet in Unity",

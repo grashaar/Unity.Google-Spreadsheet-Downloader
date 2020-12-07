@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
@@ -17,7 +16,10 @@ namespace Unity.GoogleSpreadsheetDownloader
         private string spreadsheetId = string.Empty;
 
         public string SpreadsheetId
-            => this.spreadsheetId;
+        {
+            get => this.spreadsheetId;
+            set => this.spreadsheetId = value ?? string.Empty;
+        }
 
 #if ODIN_INSPECTOR
         [ValueDropdown(nameof(formats))]
@@ -26,7 +28,10 @@ namespace Unity.GoogleSpreadsheetDownloader
         private FormatType format = FormatType.csv;
 
         public FormatType Format
-            => this.format;
+        {
+            get => this.format;
+            set => this.format = value;
+        }
 
 #if ODIN_INSPECTOR
         [DictionaryDrawerSettings(KeyLabel = "Name", ValueLabel = "Definition")]
@@ -35,7 +40,7 @@ namespace Unity.GoogleSpreadsheetDownloader
         [SerializeField]
         private SheetMap sheetDefinitions = new SheetMap();
 
-        public IReadOnlyDictionary<SheetName, SheetDefinition> SheetGids
+        public SheetMap SheetGids
             => this.sheetDefinitions;
 
         [Space]
@@ -43,7 +48,10 @@ namespace Unity.GoogleSpreadsheetDownloader
         private string downloadFolder = "GoogleSpreadsheet";
 
         public string DownloadFolder
-            => this.downloadFolder;
+        {
+            get => this.downloadFolder;
+            set => this.downloadFolder = value ?? string.Empty;
+        }
 
         public string GetDownloadUrl(string gid)
             => string.Format(_url, this.spreadsheetId, gid, this.format);
